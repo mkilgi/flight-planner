@@ -23,7 +23,7 @@ public class DataGenerationService {
   private static final Logger log = LoggerFactory.getLogger(DataGenerationService.class);
   private final PlaneRepository planeRepository;
   private final SeatRepository seatRepository;
-  private final FlightRepository flightRepository;
+  private final FlightService flightService;
 
   @PostConstruct
   public void generateData() {
@@ -60,7 +60,7 @@ public class DataGenerationService {
               .build()
       );
 
-      flightRepository.saveAll(flights);
+      flights.forEach(flightService::createFlight); // save and generate tickets
 
       System.out.println("Database seeding completed!");
     }

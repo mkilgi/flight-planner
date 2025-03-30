@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.model.Flight;
@@ -19,6 +20,7 @@ public class TicketService {
 
   private final TicketRepository ticketRepository;
   private final SeatRepository seatRepository;
+  private final Random random = new Random();
 
   @Transactional
   public void generateTicketsForFlight(Flight flight) {
@@ -30,6 +32,7 @@ public class TicketService {
     List<Seat> seats = seatRepository.findByPlaneId(plane.getId());
 
     List<Ticket> tickets = seats.stream().map(seat -> {
+      BigDecimal basePrice = BigDecimal.valueOf(20);
       BigDecimal pricePerKm = BigDecimal.valueOf(0.1);
 
       // Automatic pricing logic
@@ -46,13 +49,14 @@ public class TicketService {
       }
 
       long flightDistance = flight.getDistance();
-      BigDecimal price = pricePerKm.multiply(BigDecimal.valueOf(flightDistance));
+      BigDecimal distancePrice = pricePerKm.multiply(BigDecimal.valueOf(flightDistance));
+      BigDecimal totalPrice = basePrice.add(distancePrice);
 
       return Ticket.builder()
           .flight(flight)
           .seat(seat)
-          .price(price)
-          .isBooked(false)
+          .price(totalPrice)
+          .isBooked(random.nextBoolean())
           .build();
     }).collect(Collectors.toList());
 
