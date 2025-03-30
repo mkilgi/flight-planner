@@ -3,6 +3,7 @@ package org.example.backend.service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.model.Flight;
@@ -61,5 +62,9 @@ public class TicketService {
     }).collect(Collectors.toList());
 
     ticketRepository.saveAll(tickets);
+  }
+
+  public BigDecimal getLowestAvailableTicketForFlight(UUID flightId) {
+    return ticketRepository.findLowestPriceByFlightId(flightId).orElse(null);
   }
 }
