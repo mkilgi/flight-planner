@@ -3,8 +3,10 @@ package org.example.backend.service;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.FlightDTO;
+import org.example.backend.dto.FlightSearchRequest;
 import org.example.backend.model.Flight;
 import org.example.backend.repository.FlightRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,11 @@ public class FlightService {
     return convertToDTO(flight);
   }
 
+  public Page<FlightDTO> searchFlights(FlightSearchRequest request) {
+    Page<Flight> flights = flightRepository.searchFlights(request);
+    return flights.map(this::convertToDTO);
+  }
+
   private FlightDTO convertToDTO(Flight flight) {
     return FlightDTO.builder()
         .id(flight.getId())
@@ -33,7 +40,7 @@ public class FlightService {
         .distance(flight.getDistance())
         .departureTime(flight.getDepartureTime())
         .arrivalTime(flight.getArrivalTime())
-        .planeModel(flight.getPlane().getModel()) // Extract Plane's model
+        .planeModel(flight.getPlane().getModel())
         .lowestTicketPrice(ticketService.getLowestAvailableTicketForFlight(flight.getId()))
         .build();
   }
