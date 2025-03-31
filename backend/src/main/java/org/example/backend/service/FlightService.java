@@ -7,8 +7,10 @@ import org.example.backend.dto.FlightSearchRequest;
 import org.example.backend.model.Flight;
 import org.example.backend.repository.FlightRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,10 @@ public class FlightService {
         .planeModel(flight.getPlane().getModel())
         .lowestTicketPrice(ticketService.getLowestAvailableTicketForFlight(flight.getId()))
         .build();
+  }
+
+  public Flight getFlightOrThrow(UUID id) {
+    return flightRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found"));
   }
 }
