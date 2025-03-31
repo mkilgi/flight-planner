@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string; seat_number: string }> }) {
-	const API_URL = process.env.API_URL;
+	const API_URL = process.env.NEXT_PUBLIC_API_URL;
 	const { id, seat_number } = await params;
 
 	try {

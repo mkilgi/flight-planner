@@ -128,7 +128,7 @@ public class DataGenerationService {
         Seat seat = Seat.builder()
             .seatNumber(seatNumber)
             .hasWindow(j == 'A' || j == 'F')
-            .nearExit(i == 1 || i == 30)
+            .nearExit(i <= 5 || i >= 25)
             .extraLegroom(i == 1 || i == 15)
             .plane(plane)
             .build();

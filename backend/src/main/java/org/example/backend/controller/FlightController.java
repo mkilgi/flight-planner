@@ -87,7 +87,6 @@ public class FlightController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size) {
 
-    log.info("Received search request - From: {}, To: {}", departureFrom, departureTo);
 
     FlightSearchRequest request = new FlightSearchRequest();
     request.setOrigin(origin);
