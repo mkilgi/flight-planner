@@ -23,3 +23,12 @@ export interface FlightsResponse {
 	size: number;
 	number: number;
 }
+
+export type Seat = {
+	seatNumber: string;
+	hasWindow: boolean;
+	nearExit: boolean;
+	extraLegRoom: boolean;
+	isBooked: boolean;
+	price: number;
+};
