@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { CityCombobox } from "./city-filter-box";
 import { DateRangePicker } from "./date-range-filter";
+import { PriceFilter } from "./price-filter";
 
 const CITIES = ["Tallinn", "Helsinki", "Riga", "Berlin"]; // TODO
 
@@ -57,6 +58,11 @@ export default function FlightFilters() {
 				departureFrom={searchParams.get("departureFrom") || undefined}
 				departureTo={searchParams.get("departureTo") || undefined}
 				onDateChange={handleDateChange}
+			/>
+
+			<PriceFilter
+				value={searchParams.get("maxPrice") || ""}
+				onChange={(value) => updateParam("maxPrice", value)}
 			/>
 		</div>
 	);
