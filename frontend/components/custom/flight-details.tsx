@@ -9,7 +9,7 @@ export default function FlightDetails({ flight }: FlightDetailsProps) {
 	const arrival = new Date(flight.arrivalTime);
 	const departure = new Date(flight.departureTime);
 	return (
-		<div className="border rounded-lg p-4 bg-background mx-2 shadow-md">
+		<div className="border rounded-lg p-4 bg-white mx-2 shadow-md ">
 			<div className="grid gap-6">
 				<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 					<div className="flex items-center gap-2">

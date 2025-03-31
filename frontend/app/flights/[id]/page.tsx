@@ -8,8 +8,10 @@ export default async function FlightDetailsPage({ params }: { params: Promise<{ 
 	const seats: Seat[] = await getSeatsForFlight(id);
 	return (
 		<div className="flex flex-col items-center gap-4 bg-muted py-6">
-			{flight && <FlightDetails flight={flight} key={flight.id} />}
-			{seats && <SeatSelection seats={seats} />}
+			<div className="max-w-[64rem] flex flex-col gap-4">
+				{flight && <FlightDetails flight={flight} key={flight.id} />}
+				{seats && <SeatSelection seats={seats} />}
+			</div>
 		</div>
 	);
 }

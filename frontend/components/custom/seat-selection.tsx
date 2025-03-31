@@ -5,6 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Seat } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Info } from "lucide-react";
 
 interface SeatSelectionProps {
 	seats: Seat[];
@@ -15,7 +17,8 @@ export default function SeatSelection({ seats }: SeatSelectionProps) {
 	const [nearExit, setNearExit] = useState(false);
 	const [extraLegRoom, setExtraLegRoom] = useState(false);
 	const [maxPrice, setMaxPrice] = useState("");
-	const [groupSize, setGroupSize] = useState("2");
+	const [groupSize, setGroupSize] = useState("1");
+	const ROW_LENGTH = 6;
 
 	const getSeatColor = (seat: Seat, index: number) => {
 		if (seat.isBooked) return "bg-red-200";
@@ -31,13 +34,52 @@ export default function SeatSelection({ seats }: SeatSelectionProps) {
 	};
 
 	const findAdjacentSeats = (seats: Seat[], seatIndex: number, groupSize: number) => {
-		// TODO: some simplea lgorithm to check adjacent seats
-		return true;
+		if (groupSize <= 1) return true;
+		if (groupSize > ROW_LENGTH) return false;
+
+		// Find current row boundaries
+		const rowStart = Math.floor(seatIndex / ROW_LENGTH) * ROW_LENGTH;
+		const rowEnd = rowStart + ROW_LENGTH;
+
+		// Check left and right for seats that are not booked
+		let leftCount = 0;
+		let rightCount = 0;
+
+		for (let i = seatIndex - 1; i >= rowStart && leftCount < groupSize - 1; i--) {
+			if (seats[i].isBooked) break;
+			leftCount++;
+		}
+
+		for (let i = seatIndex + 1; i < rowEnd && rightCount < groupSize - 1; i++) {
+			if (seats[i].isBooked) break;
+			rightCount++;
+		}
+
+		return leftCount + rightCount + 1 >= groupSize;
 	};
 
 	return (
-		<div className=" bg-white p-3 rounded-md shadow-md mx-2">
-			<h1 className="text-2xl font-semibold py-2 px-1">Choose your seat</h1>
+		<div className=" bg-white p-3 rounded-lg shadow-md border mx-2">
+			<div className="flex items-center gap-1">
+				<h1 className="text-2xl font-semibold py-2 px-1">Choose your seat</h1>
+				<Tooltip>
+					<TooltipTrigger className="cursor-pointer">
+						<Info className="w-5 h-5 text-black mt-1.5" />
+					</TooltipTrigger>
+					<TooltipContent className="bg-white p-2 flex flex-col gap-2 text-primary pb-4 border-2">
+						<div className="flex items-center gap-2">
+							<span className="w-4 h-4 bg-blue-200 rounded"></span> Suggested Seat
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="w-4 h-4 bg-red-200 rounded"></span> Booked Seat
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="w-4 h-4 bg-gray-200 rounded"></span> Available Seat
+						</div>
+					</TooltipContent>
+				</Tooltip>
+			</div>
+
 			<div className="mb-6 flex flex-wrap items-center gap-4">
 				<div className="flex items-center space-x-2">
 					<Checkbox
