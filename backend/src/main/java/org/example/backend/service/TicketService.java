@@ -67,4 +67,8 @@ public class TicketService {
   public BigDecimal getLowestAvailableTicketForFlight(UUID flightId) {
     return ticketRepository.findLowestPriceByFlightId(flightId).orElse(null);
   }
+
+  public List<Ticket> getTicketsForFlight(UUID id) {
+    return ticketRepository.findByFlightId(id);
+  }
 }
