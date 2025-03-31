@@ -172,10 +172,10 @@ export default function SeatSelection({ seats, flightId }: SeatSelectionProps) {
 					>
 						<p className="font-bold">{seat.seatNumber}</p>
 						<p className="text-sm">{seat.price}€</p>
-						{seat.isBooked && <div className="text-xs text-red-600 hidden sm:inline-block">Booked</div>}
 					</div>
 				))}
 			</div>
+			{/* Seat dialog (Popup) */}
 			{selectedSeat && (
 				<Dialog open={!!selectedSeat} onOpenChange={() => setSelectedSeat(null)}>
 					<DialogContent>
