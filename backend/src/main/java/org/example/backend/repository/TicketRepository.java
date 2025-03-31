@@ -17,4 +17,6 @@ public interface TicketRepository extends JpaRepository<Ticket, UUID> {
   Optional<BigDecimal> findLowestPriceByFlightId(UUID flightId);
 
   List<Ticket> findByFlightId(UUID id);
+
+  Optional<Ticket> findByFlightIdAndSeatId(UUID id, UUID id1);
 }
