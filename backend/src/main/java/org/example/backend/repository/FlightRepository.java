@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.example.backend.dto.FlightSearchRequest;
 import org.example.backend.model.Flight;
 import org.example.backend.model.Ticket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, UUID>,
     JpaSpecificationExecutor<Flight> {
+
+  final Logger log = LoggerFactory.getLogger(FlightRepository.class);
 
   default Page<Flight> searchFlights(FlightSearchRequest request) {
     return findAll(createSpecification(request),
@@ -43,6 +47,18 @@ public interface FlightRepository extends JpaRepository<Flight, UUID>,
         predicates.add(cb.between(root.get("departureTime"),
             request.getDepartureFrom(),
             request.getDepartureTo()));
+      } else {
+        if (request.getDepartureFrom() != null) {
+          log.info(request.toString());
+          predicates.add(cb.greaterThanOrEqualTo(
+              root.get("departureTime"),
+              request.getDepartureFrom()));
+        }
+        if (request.getDepartureTo() != null) {
+          predicates.add(cb.lessThanOrEqualTo(
+              root.get("departureTime"),
+              request.getDepartureTo()));
+        }
       }
 
       if (request.getMaxPrice() != null) {
