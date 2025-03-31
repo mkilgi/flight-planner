@@ -4,6 +4,7 @@ import { Plane } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Flight } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 /**
  * Used shadcn example card
@@ -18,6 +19,7 @@ export function FlightCard({ flight }: { flight: Flight }) {
 
 	const arrival = new Date(flight.arrivalTime);
 	const departure = new Date(flight.departureTime);
+	const router = useRouter();
 
 	return (
 		<Card className="shadow-md gap-2">
@@ -56,7 +58,7 @@ export function FlightCard({ flight }: { flight: Flight }) {
 				<Button
 					className="hover:cursor-pointer"
 					onClick={() => {
-						console.log(flight.id); // TODO: navigate to single flight page
+						router.push(`/flights/${flight.id}`);
 					}}
 				>
 					Starting at {formattedPrice}
