@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+/**
+ * Used shadcn example combobox
+ * https://ui.shadcn.com/docs/components/combobox
+ */
+
 interface CityComboboxProps {
 	value: string;
 	onValueChange: (value: string) => void;
@@ -19,7 +24,11 @@ export function CityCombobox({ value, onValueChange, cities, placeholder, classN
 		<div className={cn("flex items-center gap-1", className)}>
 			<Popover>
 				<PopoverTrigger asChild>
-					<Button variant="outline" role="combobox" className="w-[200px] justify-between">
+					<Button
+						variant="outline"
+						role="combobox"
+						className="w-[200px] justify-between text-muted-foreground font-normal"
+					>
 						{value || placeholder}
 						<ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
 					</Button>

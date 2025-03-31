@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { CityCombobox } from "./city-filter-box";
+import { DateRangePicker } from "./date-range-filter";
 
 const CITIES = ["Tallinn", "Helsinki", "Riga", "Berlin"]; // TODO
 
@@ -24,8 +25,20 @@ export default function FlightFilters() {
 		router.push(`?${params.toString()}`, { scroll: false });
 	};
 
+	const handleDateChange = (range: { departureFrom?: string; departureTo?: string }) => {
+		const params = new URLSearchParams(searchParams.toString());
+
+		params.delete("departureFrom");
+		params.delete("departureTo");
+
+		if (range.departureFrom) params.set("departureFrom", range.departureFrom);
+		if (range.departureTo) params.set("departureTo", range.departureTo);
+
+		router.push(`?${params.toString()}`, { scroll: false });
+	};
+
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+		<div className="flex flex-col items-center gap-2 md:flex-row bg-muted w-full justify-center py-4">
 			<CityCombobox
 				value={searchParams.get("origin") || ""}
 				onValueChange={(value) => updateParam("origin", value)}
@@ -38,6 +51,12 @@ export default function FlightFilters() {
 				onValueChange={(value) => updateParam("destination", value)}
 				cities={CITIES}
 				placeholder="Select destination..."
+			/>
+
+			<DateRangePicker
+				departureFrom={searchParams.get("departureFrom") || undefined}
+				departureTo={searchParams.get("departureTo") || undefined}
+				onDateChange={handleDateChange}
 			/>
 		</div>
 	);
