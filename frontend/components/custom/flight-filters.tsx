@@ -17,6 +17,9 @@ export default function FlightFilters() {
 
 	const updateParam = (key: string, value: string) => {
 		const params = new URLSearchParams(searchParams.toString());
+
+		params.delete("page");
+
 		if (value) {
 			params.set(key, value);
 		} else {
@@ -29,6 +32,7 @@ export default function FlightFilters() {
 	const handleDateChange = (range: { departureFrom?: string; departureTo?: string }) => {
 		const params = new URLSearchParams(searchParams.toString());
 
+		params.delete("page");
 		params.delete("departureFrom");
 		params.delete("departureTo");
 
