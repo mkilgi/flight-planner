@@ -48,7 +48,7 @@ export default function FlightsList() {
 
 	return (
 		<div className="w-full max-w-[64rem]">
-			<div className="flex flex-col gap-4 mx-2 mb-2">
+			<div className="flex flex-col gap-4 mx-2 mb-10">
 				{flightsResponse?.content.length === 0 ? (
 					<p className="text-center">No flights found.</p>
 				) : (
