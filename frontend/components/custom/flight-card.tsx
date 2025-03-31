@@ -5,6 +5,11 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Flight } from "@/lib/utils";
 import { Button } from "../ui/button";
 
+/**
+ * Used shadcn example card
+ * https://ui.shadcn.com/docs/components/card
+ */
+
 export function FlightCard({ flight }: { flight: Flight }) {
 	const formattedPrice = new Intl.NumberFormat("en-US", {
 		style: "currency",

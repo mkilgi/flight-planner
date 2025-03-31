@@ -41,7 +41,7 @@ export default function FlightsList() {
 
 	return (
 		<div className="w-full max-w-[64rem]">
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4 mx-2">
 				{flightsResponse?.content.map((flight) => (
 					<FlightCard key={flight.id} flight={flight} />
 				))}
