@@ -1,11 +1,12 @@
+import FlightDetails from "@/components/custom/flight-details";
 import { Flight } from "@/lib/utils";
 
 export default async function FlightDetailsPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
 	const flight: Flight = await getFlight(id);
 	return (
-		<div className="flex flex-col items-center gap-2">
-			<p>{flight.id}</p>
+		<div className="flex flex-col items-center gap-2 bg-muted py-6">
+			{flight && <FlightDetails flight={flight} key={flight.id} />}
 		</div>
 	);
 }
