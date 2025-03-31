@@ -4,6 +4,7 @@ import { FlightsResponse } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FlightCard } from "./flight-card";
+import { PaginationControls } from "./pagination-controls";
 
 export default function FlightsList() {
 	const searchParams = useSearchParams();
@@ -48,10 +49,15 @@ export default function FlightsList() {
 	return (
 		<div className="w-full max-w-[64rem]">
 			<div className="flex flex-col gap-4 mx-2">
-				{error ? (
-					<p>error</p>
+				{flightsResponse?.content.length === 0 ? (
+					<p className="text-center">No flights found.</p>
 				) : (
-					flightsResponse?.content.map((flight) => <FlightCard key={flight.id} flight={flight} />)
+					<div className="flex flex-col gap-8 ">
+						{flightsResponse?.content.map((flight) => (
+							<FlightCard key={flight.id} flight={flight} />
+						))}
+						{flightsResponse && <PaginationControls flightsResponse={flightsResponse} />}
+					</div>
 				)}
 			</div>
 		</div>
