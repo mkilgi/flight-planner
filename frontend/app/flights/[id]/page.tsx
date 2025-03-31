@@ -10,7 +10,7 @@ export default async function FlightDetailsPage({ params }: { params: Promise<{ 
 		<div className="flex flex-col items-center gap-4 bg-muted py-6">
 			<div className="max-w-[64rem] flex flex-col gap-4">
 				{flight && <FlightDetails flight={flight} key={flight.id} />}
-				{seats && <SeatSelection seats={seats} />}
+				{seats && id && <SeatSelection seats={seats} flightId={id} />}
 			</div>
 		</div>
 	);

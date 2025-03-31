@@ -7,17 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Seat } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Info } from "lucide-react";
+import { DialogHeader, DialogFooter, Dialog, DialogContent, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface SeatSelectionProps {
 	seats: Seat[];
+	flightId: string;
 }
 
-export default function SeatSelection({ seats }: SeatSelectionProps) {
+export default function SeatSelection({ seats, flightId }: SeatSelectionProps) {
 	const [hasWindow, setHasWindow] = useState(false);
 	const [nearExit, setNearExit] = useState(false);
 	const [extraLegRoom, setExtraLegRoom] = useState(false);
 	const [maxPrice, setMaxPrice] = useState("");
 	const [groupSize, setGroupSize] = useState("1");
+	const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+	const router = useRouter();
 	const ROW_LENGTH = 6;
 
 	const getSeatColor = (seat: Seat, index: number) => {
@@ -56,6 +63,31 @@ export default function SeatSelection({ seats }: SeatSelectionProps) {
 		}
 
 		return leftCount + rightCount + 1 >= groupSize;
+	};
+
+	const handleConfirmBooking = async () => {
+		try {
+			if (!selectedSeat) {
+				toast("Unexpected error, no selected seat!");
+				return;
+			}
+			const response = await fetch(`/api/flights/${flightId}/seats/${selectedSeat.seatNumber}/book`, {
+				method: "PUT",
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.message || "Booking failed");
+			}
+
+			toast("Seat booked successfully");
+
+			router.refresh();
+		} catch (error) {
+			toast(error instanceof Error ? error.message : "Failed to book seat");
+		} finally {
+			setSelectedSeat(null);
+		}
 	};
 
 	return (
@@ -132,7 +164,11 @@ export default function SeatSelection({ seats }: SeatSelectionProps) {
 				{seats.map((seat, index) => (
 					<div
 						key={seat.seatNumber}
-						className={`flex flex-col  rounded-lg p-2 text-center ${getSeatColor(seat, index)}`}
+						onClick={() => setSelectedSeat(seat)}
+						className={`flex flex-col hover:cursor-pointer rounded-lg p-2 text-center ${getSeatColor(
+							seat,
+							index
+						)}`}
 					>
 						<p className="font-bold">{seat.seatNumber}</p>
 						<p className="text-sm">{seat.price}€</p>
@@ -140,6 +176,29 @@ export default function SeatSelection({ seats }: SeatSelectionProps) {
 					</div>
 				))}
 			</div>
+			{selectedSeat && (
+				<Dialog open={!!selectedSeat} onOpenChange={() => setSelectedSeat(null)}>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>
+								{selectedSeat.isBooked ? "Seat Unavailable" : "Confirm Seat Booking"}
+							</DialogTitle>
+						</DialogHeader>
+						<p>
+							{selectedSeat.isBooked
+								? `Seat ${selectedSeat.seatNumber} is already booked. Please select another seat.`
+								: `Do you want to book seat ${selectedSeat.seatNumber} for ${selectedSeat.price}€?`}
+						</p>
+						<DialogFooter>
+							{selectedSeat.isBooked ? (
+								<Button onClick={() => setSelectedSeat(null)}>OK</Button>
+							) : (
+								<Button onClick={handleConfirmBooking}>Confirm</Button>
+							)}
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			)}
 		</div>
 	);
 }
