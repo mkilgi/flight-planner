@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { format } from "date-fns";
 import { Calendar as CalendarIcon, X } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useState } from "react";
 
 /**
  * Used example from shadcn date range picker
@@ -21,9 +20,9 @@ interface DateRangePickerProps {
 }
 
 export function DateRangePicker({ departureFrom, departureTo, onDateChange }: DateRangePickerProps) {
-	const [date, setDate] = React.useState<DateRange | undefined>({
-		from: departureFrom ? new Date(departureFrom) : undefined,
-		to: departureTo ? new Date(departureTo) : undefined,
+	const [date, setDate] = useState<DateRange | undefined>({
+		from: departureFrom ? new Date(`${departureFrom}T00:00:00Z`) : undefined,
+		to: departureTo ? new Date(`${departureTo}T23:59:59.999Z`) : undefined,
 	});
 
 	const handleSelect = (range: DateRange | undefined) => {
@@ -32,14 +31,14 @@ export function DateRangePicker({ departureFrom, departureTo, onDateChange }: Da
 		let departureFromISO, departureToISO;
 
 		if (range?.from) {
-			const from = new Date(range.from);
-			from.setUTCHours(0, 0, 0, 0); // Set hours because backend expects full iso date
+			const from = new Date(Date.UTC(range.from.getFullYear(), range.from.getMonth(), range.from.getDate()));
 			departureFromISO = from.toISOString();
 		}
 
 		if (range?.to) {
-			const to = new Date(range.to);
-			to.setUTCHours(23, 59, 59, 999);
+			const to = new Date(
+				Date.UTC(range.to.getFullYear(), range.to.getMonth(), range.to.getDate(), 23, 59, 59, 999)
+			);
 			departureToISO = to.toISOString();
 		}
 
@@ -51,8 +50,7 @@ export function DateRangePicker({ departureFrom, departureTo, onDateChange }: Da
 
 	let displayText = "Select departure dates";
 	if (date?.from) {
-		const fromText = format(date.from, "MMM dd, y");
-		displayText = date.to ? `${fromText} – ${format(date.to, "MMM dd, y")}` : fromText;
+		displayText = date.to ? `${date.from.toDateString()} – ${date.to.toDateString()}` : date.from.toDateString();
 	}
 
 	return (
