@@ -3,6 +3,7 @@
 import { FlightsResponse } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FlightCard } from "./flight-card";
 
 export default function FlightsList() {
 	const searchParams = useSearchParams();
@@ -42,7 +43,7 @@ export default function FlightsList() {
 		<div className="w-full max-w-[64rem]">
 			<div className="flex flex-col gap-4">
 				{flightsResponse?.content.map((flight) => (
-					<p key={flight.id}>{flight.id}</p>
+					<FlightCard key={flight.id} flight={flight} />
 				))}
 			</div>
 		</div>

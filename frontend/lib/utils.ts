@@ -12,7 +12,8 @@ export interface Flight {
 	distance: number;
 	departureTime: string;
 	arrivalTime: string;
-	lowestAvailableTicketPrice: number;
+	planeModel: string;
+	lowestTicketPrice: number;
 }
 
 export interface FlightsResponse {
