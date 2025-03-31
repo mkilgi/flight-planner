@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * I wanted the seats to be independent, without price or flight relation so they could be reusable.
@@ -25,6 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class Ticket {
 
   @Id

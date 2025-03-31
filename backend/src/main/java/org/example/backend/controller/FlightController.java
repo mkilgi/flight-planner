@@ -14,8 +14,8 @@ import org.example.backend.dto.SeatDTO;
 import org.example.backend.model.Flight;
 import org.example.backend.model.Seat;
 import org.example.backend.model.Ticket;
-import org.example.backend.service.DataGenerationService;
 import org.example.backend.service.FlightService;
+import org.example.backend.service.SeatService;
 import org.example.backend.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/flights")
 @RequiredArgsConstructor
 public class FlightController {
-  private final FlightService flightService;
   private final Logger log = LoggerFactory.getLogger(FlightController.class);
+  private final FlightService flightService;
   private final TicketService ticketService;
+  private final SeatService seatService;
 
   @GetMapping("/{id}")
   public ResponseEntity<FlightDTO> getFlightById(@PathVariable UUID id) throws Exception {
@@ -59,6 +61,20 @@ public class FlightController {
         .toList();
 
     return ResponseEntity.ok(seatDTOs);
+  }
+
+  @PutMapping("/{id}/seats/{seatNumber}/book")
+  public ResponseEntity<Map<String, String>> bookSeat(
+      @PathVariable UUID id,
+      @PathVariable String seatNumber
+  ) {
+    Flight flight = flightService.getFlightOrThrow(id);
+    Seat seat = seatService.getSeatOrThrow(seatNumber, flight.getPlane().getId());
+
+    Ticket ticket = ticketService.getTicket(flight, seat);
+    ticketService.bookTicket(ticket);
+
+    return ResponseEntity.ok(Map.of("message", "Seat booked successfully"));
   }
 
   @GetMapping

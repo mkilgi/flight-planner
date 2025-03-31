@@ -12,8 +12,10 @@ import org.example.backend.model.Seat;
 import org.example.backend.model.Ticket;
 import org.example.backend.repository.SeatRepository;
 import org.example.backend.repository.TicketRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +72,18 @@ public class TicketService {
 
   public List<Ticket> getTicketsForFlight(UUID id) {
     return ticketRepository.findByFlightId(id);
+  }
+
+  public Ticket getTicket(Flight flight, Seat seat) {
+    return ticketRepository.findByFlightIdAndSeatId(flight.getId(), seat.getId())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seat already booked"));
+  }
+
+  public void bookTicket(Ticket ticket) {
+    if (ticket.isBooked()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seat already booked");
+    }
+    ticket.setBooked(true);
+    ticketRepository.save(ticket);
   }
 }
