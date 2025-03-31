@@ -6,7 +6,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.FlightDTO;
 import org.example.backend.dto.FlightSearchRequest;
+import org.example.backend.service.DataGenerationService;
 import org.example.backend.service.FlightService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FlightController {
   private final FlightService flightService;
+  private final Logger log = LoggerFactory.getLogger(FlightController.class);
 
   @GetMapping("/{id}")
   public ResponseEntity<FlightDTO> getFlightById(@PathVariable UUID id) throws Exception {
@@ -37,6 +41,8 @@ public class FlightController {
       @RequestParam(required = false) BigDecimal maxPrice,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size) {
+
+    log.info("Received search request - From: {}, To: {}", departureFrom, departureTo);
 
     FlightSearchRequest request = new FlightSearchRequest();
     request.setOrigin(origin);
