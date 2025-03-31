@@ -1,4 +1,5 @@
 import FlightDetails from "@/components/custom/flight-details";
+import SeatSelection from "@/components/custom/seat-selection";
 import { Flight, Seat } from "@/lib/utils";
 
 export default async function FlightDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -6,8 +7,9 @@ export default async function FlightDetailsPage({ params }: { params: Promise<{ 
 	const flight: Flight = await getFlight(id);
 	const seats: Seat[] = await getSeatsForFlight(id);
 	return (
-		<div className="flex flex-col items-center gap-2 bg-muted py-6">
+		<div className="flex flex-col items-center gap-4 bg-muted py-6">
 			{flight && <FlightDetails flight={flight} key={flight.id} />}
+			{seats && <SeatSelection seats={seats} />}
 		</div>
 	);
 }
