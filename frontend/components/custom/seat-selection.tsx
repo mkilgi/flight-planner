@@ -30,10 +30,12 @@ export default function SeatSelection({ seats, flightId }: SeatSelectionProps) {
 	const getSeatColor = (seat: Seat, index: number) => {
 		if (seat.isBooked) return "bg-red-200";
 
+		console.log(seat);
+
 		const matchesFilters =
 			(!hasWindow || seat.hasWindow) &&
 			(!nearExit || seat.nearExit) &&
-			(!extraLegRoom || seat.extraLegRoom) &&
+			(!extraLegRoom || seat.extraLegroom) &&
 			(!maxPrice || seat.price <= Number(maxPrice)) &&
 			findAdjacentSeats(seats, index, Number(groupSize));
 

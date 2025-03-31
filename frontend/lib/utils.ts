@@ -28,7 +28,7 @@ export type Seat = {
 	seatNumber: string;
 	hasWindow: boolean;
 	nearExit: boolean;
-	extraLegRoom: boolean;
+	extraLegroom: boolean;
 	isBooked: boolean;
 	price: number;
 };
