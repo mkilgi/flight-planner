@@ -5,7 +5,43 @@ import { CityCombobox } from "./city-filter-box";
 import { DateRangePicker } from "./date-range-filter";
 import { PriceFilter } from "./price-filter";
 
-const CITIES = ["Tallinn", "Helsinki", "Riga", "Berlin"]; // TODO
+const CITIES = [
+	"Tallinn",
+	"Helsinki",
+	"Riga",
+	"Vilnius",
+	"Oslo",
+	"Stockholm",
+	"Copenhagen",
+	"Warsaw",
+	"Berlin",
+	"Prague",
+	"Amsterdam",
+	"Paris",
+	"London",
+	"Edinburgh",
+	"Dublin",
+	"Vienna",
+	"Budapest",
+	"Bratislava",
+	"Munich",
+	"Belgrade",
+	"Bucharest",
+	"Zagreb",
+	"Rome",
+	"Milan",
+	"Barcelona",
+	"Madrid",
+	"Lisbon",
+	"Athens",
+	"Marseille",
+	"Hamburg",
+	"Kyiv",
+	"Odessa",
+	"Minsk",
+	"Sofia",
+	"Istanbul",
+]; // :)
 
 /**
  * Flight fliters push filtering params to url and flights-list reacts to url changes
@@ -17,6 +53,9 @@ export default function FlightFilters() {
 
 	const updateParam = (key: string, value: string) => {
 		const params = new URLSearchParams(searchParams.toString());
+
+		params.delete("page");
+
 		if (value) {
 			params.set(key, value);
 		} else {
@@ -29,6 +68,7 @@ export default function FlightFilters() {
 	const handleDateChange = (range: { departureFrom?: string; departureTo?: string }) => {
 		const params = new URLSearchParams(searchParams.toString());
 
+		params.delete("page");
 		params.delete("departureFrom");
 		params.delete("departureTo");
 
